@@ -1,0 +1,19 @@
+[Unit]
+Description=Sing-Box Gateway Manager [%i]
+Documentation=https://github.com/crashpb/sing-box-gateway-manager
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sing-box-gateway-manager
+ExecStart=/opt/sing-box-gateway-manager/scripts/core.sh %i start
+ExecStop=/opt/sing-box-gateway-manager/scripts/core.sh %i stop
+# mixed: Lets Systemd send SIGTERM to the main process, but allows
+# the core.sh stop script to handle the cleanup of child processes (responder).
+KillMode=mixed
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

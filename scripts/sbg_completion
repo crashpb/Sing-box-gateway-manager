@@ -1,0 +1,21 @@
+_sbg_completions() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="start stop restart status"
+    
+    if [[ ${COMP_CWORD} -eq 1 ]]; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+    
+    case "${prev}" in
+        start|stop|restart|status)
+            local configs=$(ls /opt/sing-box-gateway-manager/conf/*.conf 2>/dev/null | xargs -n 1 basename | sed 's/\.conf$//')
+            COMPREPLY=( $(compgen -W "${configs}" -- ${cur}) )
+            return 0
+            ;;
+    esac
+}
+complete -F _sbg_completions sbg
